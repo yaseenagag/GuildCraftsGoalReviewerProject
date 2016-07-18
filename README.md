@@ -25,6 +25,12 @@ Serving an actual customer is a huge part of writing good software.  If you take
 - [ ] The artifact produced is properly licensed, preferably with the [MIT license][mit-license].
 - [ ] Integrate with echo to pull in info of who's already completed one goals (instead of having to enter it manually as currently done)
 
+![project flow](https://cloud.githubusercontent.com/assets/18561576/16932874/4eef764a-4cfe-11e6-83fb-d17dcc66d915.JPG)
+
+![wireframes](https://cloud.githubusercontent.com/assets/18561576/16932893/75b7d826-4cfe-11e6-8f1c-616d126a7b36.JPG)
+
+![functions](https://cloud.githubusercontent.com/assets/18561576/16932901/86092c52-4cfe-11e6-9710-32a8fc334960.JPG)
+
 ---
 
 <!-- LICENSE -->
