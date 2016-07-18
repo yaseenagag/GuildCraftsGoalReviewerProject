@@ -18,7 +18,7 @@ Serving an actual customer is a huge part of writing good software.  If you take
 - [ ] You schedule an hourly task to perform this sync, but can also do it on demand
 - [ ] You have interviewed at least three potential users at your app and integrated their feedback
 - [ ] Your site uses a database (SQL or Mongo) to store additional information about each goal
-- [ ] Choose Angular, React or another framework to create a smooth, one-page app UX
+- [ ] Choose React to create a smooth, one-page app UX
 - [ ] Determine whether you want a Service-Oriented Architecture (front-end
 - [ ] You can search/filter the full description in table view
 - [ ] Anonymous users can upvote or downvote the goals
