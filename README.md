@@ -21,7 +21,6 @@ Serving an actual customer is a huge part of writing good software.  If you take
 - [ ] You have deployed a first verison midweek and at this point focused on UX.
 - [ ] Use React to create a smooth, one-page app UX
 - [ ] You can search/filter the full description in table view
-- [ ] Anonymous users can upvote or downvote the goals
 - [ ] Registered (or anonymous) users can review goals
 - [ ] The artifact produced is properly licensed, preferably with the [MIT license][mit-license].
 - [ ] Integrate with echo to pull in info of who's already completed one goals (instead of having to enter it manually as currently done)
