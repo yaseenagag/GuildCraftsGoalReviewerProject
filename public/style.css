@@ -1,0 +1,32 @@
+html, body, #content {
+  margin: 0;
+  padding: 0;
+  background: red;
+}
+html, body{
+  height: 100%;
+  width: 100%;
+}
+
+#content {
+  background: green;
+  overflow: auto;
+  min-height: 100%;
+  min-width: 100%;
+}
+
+
+.LoginLink{
+  background-color: blue;
+  color: white;
+  padding: 0.25em 0.5em;
+  border-radius: 5px;
+}
+
+.LoginLink-huge{
+  font-size: 130%;
+}
+
+.LoginLink-small{
+  font-size: 80%;
+}
