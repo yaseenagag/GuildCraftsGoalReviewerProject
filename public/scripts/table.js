@@ -1,30 +1,81 @@
-var Table = React.createClass ({
-  render: function render() {
-    var _self = this;
+var TableHeader = React.createClass({
+  render: function() {
+    return (
+      <thead>
+        <TableRow number="Number"
+          user={{login: "Name"}}
+          created_at="Date"
+          title="Title"
+          labels={[ { name: "Labels" } ]} />
+      </thead>
+    );
+  }
+})
 
-    var thread = React.DOM.thead({},
-      React.DOM.tr({},
-        this.props.cols.map(function (col) {
-          return React.DOM.this({}, col);
-        })));
-    var tbody = this.props.rows.map(function (row) {
-          return React.DOM.tr(),
-          _self.props.cols.map(function (col) {
-            return React.DOM.td({}, row[col] || "");
-          }));
+var LabelList = React.createClass({
+  labelItems: function() {
+    const { goalId } = this.props
+
+    return this.props.labels.map( function( label, index ) {
+      const className = `label-${goalId}-${index}`
+
+      return <div key={className} className="label">{label.name}</div>
     });
+  },
 
-    return React.DOM.table({}, [thead, tbody]);
+  render: function() {
+    return (
+      <div className="label-list">
+        {this.labelItems()}
+      </div>
+    )
   }
 });
 
-var container = document.querySelector("#content");
+var TableRow = React.createClass({
+  render: function() {
+    return (
+      <tr>
+        <td>{this.props.number}</td>
+        <td>{this.props.user.login}</td>
+        <td>{this.props.title}</td>
+        <td>{this.props.created_at}</td>
+        <td><LabelList goalId={this.props.id} labels={this.props.labels} /></td>
+      </tr>
+    );
+  }
+})
 
-var TableModel = {
-  cols: ["Number", "Name", "Date", "Author", "Labels"],
-  rows: [{"Number":"num", "Name":"title", "Date":"mm/dd/yyyy", "Author":"username", "Labels":"Status"
+var Table = React.createClass ({
+  tableRows: function() {
+    return this.props.rows.map( function( goal ) {
+      return <TableRow key={goal.id}
+        id={goal.id}
+        number={goal.number}
+        user={goal.user}
+        created_at={goal.created_at}
+        title={goal.title}
+        labels={goal.labels} />
+    });
+  },
 
-  }],
-}
+  render: function render() {
+    return (
+      <div className="result-table">
+        <table>
+          <TableHeader />
+          <tbody>
+            {this.tableRows()}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+});
 
-React.renderComponent(Table(tableModel), container);
+$.getJSON( `/data/goals.json?${new Date()}`, function( goals ) {
+  ReactDOM.render(
+    <Table rows={goals} />,
+    document.querySelector("#content")
+  );
+})
