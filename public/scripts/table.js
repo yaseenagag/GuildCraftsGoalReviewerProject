@@ -8,7 +8,7 @@ var Table = React.createClass ({
           return React.DOM.this({}, col);
         })));
     var tbody = this.props.rows.map(function (row) {
-          return React.DOM.tri{},
+          return React.DOM.tr(),
           _self.props.cols.map(function (col) {
             return React.DOM.td({}, row[col] || "");
           }));
