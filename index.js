@@ -57,6 +57,7 @@ app.get('/api/profile', function(req, res){
   if (!req.session.github_access_token){
     res.json({
       error: "not logged in",
+      notLoggedIn: true,
       loginURI: getLoginURI(),
     })
     return;
@@ -69,9 +70,9 @@ app.get('/api/profile', function(req, res){
     var profile = response.data;
     res.json(profile)
   }).catch(function(error){
-    console.log('getProfile promise failed')
-    console.error(error)
-    res.send('<h1>ERROR getting your profile info</h1>'+error);
+    res.json({
+      error: error
+    })
   })
 })
 
