@@ -38,7 +38,9 @@ var Root = React.createClass({
 
     var Page = router(this.props.path)
 
-    return <Page profile={profile} />
+    return <Layout>
+      <Page profile={profile} />
+    </Layout>
   }
 });
 
@@ -67,13 +69,23 @@ function router(path){
 // Components
 
 
+var Layout = function(props){
+  return <div>
+    <Header />
+    {props.children}
+  </div>
+}
+
+var Header = function(props){
+  return <header>
+    <a href="/">Home</a> | 
+    <a href="/goals">Goals</a>
+  </header>
+}
+
 var HomePage = function(props){
   var profile = props.profile;
   return <div>
-    <header>
-      <a href="/">Home</a>
-      <a href="/goals">Goals</a>
-    </header>
     <h1>Welcome Back {profile.name}</h1>
     <img src={profile.avatar_url} />
   </div>
