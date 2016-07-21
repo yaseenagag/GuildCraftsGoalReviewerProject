@@ -22,33 +22,6 @@ app.use(cookieSession({
   ]
 }))
 
-app.get('/', function (req, res) {
-  if (!req.session.github_access_token){
-    var scope = 'user%20public_repo%20read:org%20repo%20repo:status'
-    var github_oauth_login_url = 'https://github.com/login/oauth/authorize?'
-    github_oauth_login_url += 'scope='+scope
-    github_oauth_login_url += '&client_id='+process.env.GITHUB_CLIENT_ID
-    github_oauth_login_url += '&redirect_uri='+process.env.GITHUB_REDIRECT_URI
-    github_oauth_login_url += '&state=FROGS_SUCK'
-    res.send('<h1>Please log in!</h1><a href="'+github_oauth_login_url+'">Click here now</a> to begin!</a>');
-    return;
-  }
-
-  var gh = new GitHub({token: req.session.github_access_token});
-
-  var me = gh.getUser()
-
-  me.getProfile().then(function(response){
-    var profile = response.data;
-    console.log('profile => ', profile)
-    res.send('<h1>Welcome back '+profile.login+'</h1><a href="/logout">Logout</a>');
-  }).catch(function(error){
-    console.log('getProfile promise failed')
-    console.error(error)
-    res.send('<h1>ERROR getting your profile info</h1>'+error);
-  })
-});
-
 app.get('/oauth_callback', function(req,res){
   var code = req.query.code, state = req.query.state;
   console.log('req.query', req.query)
@@ -80,6 +53,47 @@ app.get('/logout', function(req,res){
   res.redirect('/')
 })
 
+app.get('/api/profile', function(req, res){
+  if (!req.session.github_access_token){
+    res.json({
+      error: "not logged in",
+      loginURI: getLoginURI(),
+    })
+    return;
+  }
+  var gh = new GitHub({token: req.session.github_access_token});
+
+  var me = gh.getUser()
+
+  me.getProfile().then(function(response){
+    var profile = response.data;
+    res.json(profile)
+  }).catch(function(error){
+    console.log('getProfile promise failed')
+    console.error(error)
+    res.send('<h1>ERROR getting your profile info</h1>'+error);
+  })
+})
+
+app.use(express.static(__dirname+'/public'));
+
+app.get('*', function (req, res) {
+  res.sendFile(__dirname+'/public/index.html')
+});
+
+
 app.listen(port, function () {
   console.log('Example app listening on port http://0.0.0.0:'+port);
 });
+
+
+
+function getLoginURI(){
+  var scope = 'user%20public_repo%20read:org%20repo%20repo:status'
+  var github_oauth_login_url = 'https://github.com/login/oauth/authorize?'
+  github_oauth_login_url += 'scope='+scope
+  github_oauth_login_url += '&client_id='+process.env.GITHUB_CLIENT_ID
+  github_oauth_login_url += '&redirect_uri='+process.env.GITHUB_REDIRECT_URI
+  github_oauth_login_url += '&state=FROGS_SUCK'
+  return github_oauth_login_url;
+}
