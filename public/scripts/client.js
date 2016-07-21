@@ -1,5 +1,9 @@
 var Root = React.createClass({
 
+  propTypes: {
+    path: React.PropTypes.string.isRequired
+  },
+
   getInitialState: function(){
     return {
       profile: null
@@ -32,14 +36,83 @@ var Root = React.createClass({
       </div>
     }
 
-    return <div>
-      <h1>Welcome Back {profile.name}</h1>
-      <img src={profile.avatar_url} />
-    </div>
+    var Page = router(this.props.path)
+
+    return <Page profile={profile} />
   }
 });
 
 ReactDOM.render(
-  <Root />,
+  <Root path={location.pathname} />,
   document.getElementById('content')
 );
+
+
+
+function router(path){
+  // strip off any trailing slash
+  if (path[path.length-1] === '/') path = path.slice(0,-1)
+
+  if (path === '') return HomePage
+  if (path === '/goals') return GoalsPage
+  if (path.match(/^\/goals\/(\d+)/)){
+    return function(props){
+      return <GoalPage goalId={RegExp.$1} {...props} />
+    }
+  }
+  return NotFoundPage
+}
+
+
+// Components
+
+
+var HomePage = function(props){
+  var profile = props.profile;
+  return <div>
+    <header>
+      <a href="/">Home</a>
+      <a href="/goals">Goals</a>
+    </header>
+    <h1>Welcome Back {profile.name}</h1>
+    <img src={profile.avatar_url} />
+  </div>
+};
+
+var GoalsPage = React.createClass({
+  getInitialState: function(){
+    return {
+      goals: null
+    }
+  },
+
+  componentWillMount: function(){
+    $.getJSON('/api/goals', function(goals){
+      this.setState({goals: goals})
+    }.bind(this))
+  },
+
+  render: function(props){
+    var goals = this.state.goals === null ? <div>Loading...</div> :
+      <ol>{this.state.goals.map(GoalListItem)}</ol>
+
+    return <div>
+      <h1>Goals Page</h1>
+      {goals}
+    </div>;
+  }
+});
+
+var GoalListItem = function(props){
+  return <div key={props.id}>
+    <a href={"/goals/"+props.number}>{props.title}</a>
+  </div>
+}
+
+var GoalPage = function(props){
+  return <div>Goal #{props.goalId} Page</div>;
+};
+
+var NotFoundPage = function(){
+  return <div>Page Not Found</div>;
+}

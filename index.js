@@ -76,6 +76,27 @@ app.get('/api/profile', function(req, res){
   })
 })
 
+app.get('/api/goals', function(req, res){
+  if (!req.session.github_access_token) throw new Error('ACCESS DENIED')
+
+
+  var url = 'https://api.github.com/repos/GuildCrafts/web-development-js/issues'
+  url += '?'+qs.stringify({access_token: req.session.github_access_token})
+  console.log('???', url)
+
+  request({
+    method: 'GET',
+    url: url,
+    headers: {'User-Agent': 'node'},
+  }, function(error, response){
+    if (error) return res.json({error: error})
+    console.log(response.body)
+    var issues = JSON.parse(response.body)
+    console.log('ISSUES', issues)
+    res.json(issues)
+  })
+});
+
 app.use(express.static(__dirname+'/public'));
 
 app.get('*', function (req, res) {
@@ -90,11 +111,12 @@ app.listen(port, function () {
 
 
 function getLoginURI(){
-  var scope = 'user%20public_repo%20read:org%20repo%20repo:status'
-  var github_oauth_login_url = 'https://github.com/login/oauth/authorize?'
-  github_oauth_login_url += 'scope='+scope
-  github_oauth_login_url += '&client_id='+process.env.GITHUB_CLIENT_ID
-  github_oauth_login_url += '&redirect_uri='+process.env.GITHUB_REDIRECT_URI
-  github_oauth_login_url += '&state=FROGS_SUCK'
-  return github_oauth_login_url;
+  var loginURI = 'https://github.com/login/oauth/authorize'
+  loginURI += '?'+qs.stringify({
+    scope: 'user read:org admin:org repo',
+    client_id: process.env.GITHUB_CLIENT_ID,
+    redirect_uri: process.env.GITHUB_REDIRECT_URI,
+    state: 'FROGS_SUCK'
+  })
+  return loginURI
 }
