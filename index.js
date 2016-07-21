@@ -76,6 +76,11 @@ app.get('/api/profile', function(req, res){
   })
 })
 
+app.get('/api/goal/:goalId', function(req, res){
+  // req.params.goalId
+
+});
+
 app.get('/api/goals', function(req, res){
   if (!req.session.github_access_token) throw new Error('ACCESS DENIED')
 

@@ -99,6 +99,7 @@ var GoalsPage = React.createClass({
   },
 
   componentWillMount: function(){
+    // $.getJSON('/api/goal/'+this.props.goalId, function(goals){
     $.getJSON('/api/goals', function(goals){
       this.setState({goals: goals})
     }.bind(this))
