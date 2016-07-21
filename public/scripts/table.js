@@ -14,7 +14,7 @@ var ToggleHeader = React.createClass({
 
   render: function() {
     return (
-      <a href="#" onClick={this.toggle}>{this.props.children}</a>
+      <a href="#" button className="btn" onClick={this.toggle}>{this.props.children}</a>
     )
   }
 });
@@ -30,8 +30,8 @@ var TableHeader = React.createClass({
             </ToggleHeader>
           </th>
           <th>Name</th>
-          <th>Date</th>
           <th>Title</th>
+          <th>Date</th>
           <th>Labels</th>
         </tr>
       </thead>
