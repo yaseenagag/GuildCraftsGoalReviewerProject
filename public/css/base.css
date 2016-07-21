@@ -61,3 +61,12 @@ ul {
 .result-table table {
   border: 1px solid #369;
 }
+
+.btn {
+  background-color: grey;
+  color: blue;
+}
+
+.btn:hover {
+  background-color: green;
+}

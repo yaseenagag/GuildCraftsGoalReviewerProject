@@ -1,12 +1,39 @@
+var ToggleHeader = React.createClass({
+  getInitialState: function() {
+    return { direction: 'ascending' }
+  },
+
+  toggle: function() {
+    const { sort, sortKey } = this.props
+    const { direction } = this.state
+
+    sort( sortKey, direction )
+
+    this.setState({ direction: direction === 'ascending' ? 'descending' : 'ascending' })
+  },
+
+  render: function() {
+    return (
+      <a href="#" onClick={this.toggle}>{this.props.children}</a>
+    )
+  }
+});
+
 var TableHeader = React.createClass({
   render: function() {
     return (
       <thead>
-        <TableRow number="Number"
-          user={{login: "Name"}}
-          created_at="Date"
-          title="Title"
-          labels={[ { name: "Labels" } ]} />
+        <tr>
+          <th>
+            <ToggleHeader sort={this.props.sort} sortKey='number'>
+              Number
+            </ToggleHeader>
+          </th>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Title</th>
+          <th>Labels</th>
+        </tr>
       </thead>
     );
   }
@@ -37,7 +64,7 @@ var TableRow = React.createClass({
     return (
       <tr>
         <td>{this.props.number}</td>
-        <td>{this.props.user.login}</td>
+        <td>{this.props.user}</td>
         <td>{this.props.title}</td>
         <td>{this.props.created_at}</td>
         <td><LabelList goalId={this.props.id} labels={this.props.labels} /></td>
@@ -47,8 +74,18 @@ var TableRow = React.createClass({
 })
 
 var Table = React.createClass ({
+  defaultInitialState: function() {
+    return {
+      rows: []
+    }
+  },
+
+  componentWillMount: function() {
+    this.setState({ rows: this.props.rows })
+  },
+
   tableRows: function() {
-    return this.props.rows.map( function( goal ) {
+    return this.state.rows.map( function( goal ) {
       return <TableRow key={goal.id}
         id={goal.id}
         number={goal.number}
@@ -59,11 +96,32 @@ var Table = React.createClass ({
     });
   },
 
+  sortTable: function( sortKey, direction ) {
+    const multiplier = direction === 'ascending' ? 1 : -1;
+
+    const sortedRows = this.state.rows.sort( function( a, b ) {
+      const first = a[ sortKey ]
+      const second = b[ sortKey ]
+
+      if( first > second ) {
+        return 1 * multiplier;
+      }
+
+      if( first < second ) {
+        return -1 * multiplier;
+      }
+
+      return 0;
+    });
+
+    this.setState({ rows: sortedRows });
+  },
+
   render: function render() {
     return (
       <div className="result-table">
         <table>
-          <TableHeader />
+          <TableHeader sort={this.sortTable} />
           <tbody>
             {this.tableRows()}
           </tbody>
@@ -74,8 +132,19 @@ var Table = React.createClass ({
 });
 
 $.getJSON( `/data/goals.json?${new Date()}`, function( goals ) {
+  var normalizedGoals = goals.map( function( goal ) {
+    return {
+      number: goal.number,
+      user: goal.user.login,
+      title: goal.title,
+      created_at: goal.created_at,
+      id: goal.id,
+      labels: goal.labels
+    }
+  })
+
   ReactDOM.render(
-    <Table rows={goals} />,
+    <Table rows={normalizedGoals} />,
     document.querySelector("#content")
   );
 })
