@@ -11,18 +11,18 @@ Serving an actual customer is a huge part of writing good software.  If you take
 
 ## Required Specs (Must Have)
 
-- [ ] Oauth for users to login with.
-- [ ] Pull data directly from GitHub, instead of storing data locally.
+- [x] Oauth for users to login with.
+- [x] Pull data directly from GitHub, instead of storing data locally.
 - [ ] An external, published, all-JS site which improves the UX of browsing/searching these goals
 - [ ] Basically, duplicate the functionality of https://goals-viewer-api.herokuapp.com
 - [ ] Store voting data in GitHub
-- [ ] Your site uses the GitHub API to access goal data.
+- [x] Your site uses the GitHub API to access goal data.
 - [ ] You have interviewed at least three potential users at your app and integrated their feedback
-- [ ] You have deployed a first verison midweek and at this point focused on UX.
-- [ ] Use React to create a smooth, one-page app UX
+- [x] You have deployed a first verison midweek and at this point focused on UX.
+- [x] Use React to create a smooth, one-page app UX
 - [ ] You can search/filter the full description in table view
-- [ ] Registered (or anonymous) users can review goals
-- [ ] The artifact produced is properly licensed, preferably with the [MIT license][mit-license].
+- [x] Registered (or anonymous) users can review goals
+- [x] The artifact produced is properly licensed, preferably with the [MIT license][mit-license].
 - [ ] Integrate with echo to pull in info of who's already completed one goals (instead of having to enter it manually as currently done)
 
 ![project flow](https://cloud.githubusercontent.com/assets/18561576/16932874/4eef764a-4cfe-11e6-83fb-d17dcc66d915.JPG)
