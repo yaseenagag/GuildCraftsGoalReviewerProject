@@ -149,7 +149,8 @@ var GoalPage = React.createClass({
     return <div>
       <h1>{goal.title} {goal.number}</h1>
       <h3>{goal.user.login}</h3>
-      <h5>{goal.url}</h5>
+      <h4>{goal.created_at}</h4>
+      <h4><a href={goal.html_url}>{goal.html_url}</a></h4>
       <span dangerouslySetInnerHTML={this.rawMarkup()} />
     </div>
   }
