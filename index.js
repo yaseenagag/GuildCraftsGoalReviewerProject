@@ -67,8 +67,8 @@ app.get('/api/profile', function(req, res){
   var me = gh.getUser()
 
   me.getProfile().then(function(response){
-    var profile = response.data;
-    res.json(profile)
+    var issue = response.data;
+    res.json(issue)
   }).catch(function(error){
     res.json({
       error: error
@@ -76,31 +76,39 @@ app.get('/api/profile', function(req, res){
   })
 })
 
-app.get('/api/goal/:goalId', function(req, res){
-  // req.params.goalId
-
-});
 
 app.get('/api/goals', function(req, res){
   if (!req.session.github_access_token) throw new Error('ACCESS DENIED')
 
+  var gh = new GitHub({token: req.session.github_access_token});
+  var issues = gh.getIssues('GuildCrafts', 'web-development-js')
 
-  var url = 'https://api.github.com/repos/GuildCrafts/web-development-js/issues'
-  url += '?'+qs.stringify({access_token: req.session.github_access_token})
-  console.log('???', url)
-
-  request({
-    method: 'GET',
-    url: url,
-    headers: {'User-Agent': 'node'},
-  }, function(error, response){
-    if (error) return res.json({error: error})
-    console.log(response.body)
-    var issues = JSON.parse(response.body)
-    console.log('ISSUES', issues)
+  issues.listIssues().then(function(response){
+    var issues = response.data;
     res.json(issues)
+  }).catch(function(error){
+    res.json({
+      error: error
+    })
   })
 });
+
+app.get('/api/goals/:goalNumber', function(req, res){
+  var goalNumber = req.params.goalNumber
+
+  var gh = new GitHub({token: req.session.github_access_token});
+  var issues = gh.getIssues('GuildCrafts', 'web-development-js')
+
+  issues.getIssue(goalNumber).then(function(response){
+    var profile = response.data;
+    res.json(profile)
+  }).catch(function(error){
+    res.json({
+      error: error
+    })
+  })
+});
+
 
 app.use(express.static(__dirname+'/public'));
 

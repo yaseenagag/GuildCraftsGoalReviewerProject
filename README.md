@@ -13,7 +13,7 @@ Serving an actual customer is a huge part of writing good software.  If you take
 
 - [ ] Oauth for users to login with.
 - [ ] Pull data directly from GitHub, instead of storing data locally.
-- [ ] An external, published, all-JS site which improves the UX of browsing/searching these goals 
+- [ ] An external, published, all-JS site which improves the UX of browsing/searching these goals
 - [ ] Basically, duplicate the functionality of https://goals-viewer-api.herokuapp.com
 - [ ] Store voting data in GitHub
 - [ ] Your site uses the GitHub API to access goal data.
@@ -40,3 +40,10 @@ Serving an actual customer is a huge part of writing good software.  If you take
 
 [mit-license]: https://opensource.org/licenses/MIT
 
+## Development
+
+Start the server
+
+```bash
+ ./node_modules/.bin/nodemon index.js
+ ```

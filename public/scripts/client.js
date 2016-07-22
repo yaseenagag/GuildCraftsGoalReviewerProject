@@ -58,8 +58,9 @@ function router(path){
   if (path === '') return HomePage
   if (path === '/goals') return GoalsPage
   if (path.match(/^\/goals\/(\d+)/)){
+    var goalNumber = RegExp.$1
     return function(props){
-      return <GoalPage goalId={RegExp.$1} {...props} />
+      return <GoalPage goalNumber={goalNumber} {...props} />
     }
   }
   return NotFoundPage
@@ -78,7 +79,7 @@ var Layout = function(props){
 
 var Header = function(props){
   return <header>
-    <a href="/">Home</a> | 
+    <a href="/">Home</a> |
     <a href="/goals">Goals</a>
   </header>
 }
@@ -99,7 +100,6 @@ var GoalsPage = React.createClass({
   },
 
   componentWillMount: function(){
-    // $.getJSON('/api/goal/'+this.props.goalId, function(goals){
     $.getJSON('/api/goals', function(goals){
       this.setState({goals: goals})
     }.bind(this))
@@ -118,13 +118,42 @@ var GoalsPage = React.createClass({
 
 var GoalListItem = function(props){
   return <div key={props.id}>
-    <a href={"/goals/"+props.number}>{props.title}</a>
+    <a href={"/goals/"+props.number}>{props.number} {props.title}</a>
   </div>
 }
 
-var GoalPage = function(props){
-  return <div>Goal #{props.goalId} Page</div>;
-};
+var GoalPage = React.createClass({
+
+  getInitialState: function(){
+    return {
+      goal: null,
+    }
+  },
+
+  componentWillMount: function(){
+    $.getJSON('/api/goals/'+this.props.goalNumber, function(goal){
+      this.setState({goal: goal})
+    }.bind(this))
+  },
+
+  rawMarkup: function() {
+    var md = new Remarkable();
+    var rawMarkup = md.render(this.state.goal.body.toString());
+    return { __html: rawMarkup };
+  },
+
+  render: function(props){
+    var goal = this.state.goal
+    if (goal === null) return <div>Loading goal {this.props.goalNumber}</div>
+
+    return <div>
+      <h1>{goal.title} {goal.number}</h1>
+      <h3>{goal.user.login}</h3>
+      <h5>{goal.url}</h5>
+      <span dangerouslySetInnerHTML={this.rawMarkup()} />
+    </div>
+  }
+});
 
 var NotFoundPage = function(){
   return <div>Page Not Found</div>;
